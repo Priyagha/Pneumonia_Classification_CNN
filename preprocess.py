@@ -8,3 +8,7 @@ from pytorch_lightning.loggers import TensorBoardLogger
 from tqdm.notebook import tqdm
 import numpy as np
 import matplotlib.pyplot as plt
+
+
+def load_file(path):
+    return np.load(path).astype(np.float32)
