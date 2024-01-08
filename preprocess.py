@@ -19,3 +19,6 @@ labels = pd.read_csv("/path/to/rsna-pneumonia-detection-challenge/stage_2_train_
 # Remove duplicate entries
 labels = labels.drop_duplicates("patientId")
 
+# Saving path to dicom file and also the path were we want to store our processed npy files
+ROOT_PATH = Path("/path/to/rsna-pneumonia-detection-challenge/stage_2_train_images/")
+SAVE_PATH = Path("Processed/")
