@@ -15,3 +15,7 @@ import cv2
 
 # We need the csv file containnig the labels
 labels = pd.read_csv("/path/to/rsna-pneumonia-detection-challenge/stage_2_train_labels.csv")
+
+# Remove duplicate entries
+labels = labels.drop_duplicates("patientId")
+
