@@ -28,6 +28,7 @@ Then the created numpy images are stored in two separate folders according to th
 * 0: All X-Rays which do not show signs of pneumonia
 * 1: All X-Rays which show signs of pneumonia
 '''
+
 sums = 0
 sums_squared = 0
 
@@ -57,3 +58,7 @@ for c, patient_id in enumerate(tqdm(labels.patientId)):
     if train_or_val == "train":  # Only use train data to compute dataset statistics
         sums += np.sum(dcm_array) / normalizer
         sums_squared += (np.power(dcm_array, 2).sum()) / normalizer
+
+# Calculating mean and std
+mean = sums / 24000
+std = np.sqrt(sums_squared / 24000 - (mean**2))
