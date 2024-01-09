@@ -39,9 +39,8 @@ for c, patient_id in enumerate(tqdm(labels.patientId)):
     # Read the dicom file with pydicom and standardize the array
     dcm = pydicom.read_file(dcm_path).pixel_array / 255  
         
-    # Resize the image as 1024x1024 is way to large to be handeled by Deep Learning models at the moment
-    # Let's use a shape of 224x224
-    # In order to use less space when storing the image we convert it to float16
+    # Resize the image as 1024x1024 is way to large to be handeled by Deep Learning models at the moment so reshaping to 224x224
+    # In order to use less space when storing the image converting it to float16
     dcm_array = cv2.resize(dcm, (224, 224)).astype(np.float16)
     
     # Retrieve the corresponding label
