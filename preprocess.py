@@ -18,20 +18,20 @@ ROOT_PATH = Path("Data/stage_2_train_images")
 SAVE_PATH = Path("Data/check_test")
 
 # Taking a look at few images
+counter = 0
 fig, axis = plt.subplots(3, 3, figsize=(9, 9))
-c = 0
 for i in range(3):
     for j in range(3):
-        patient_id = labels.patientId.iloc[c]
+        patient_id = labels.patientId.iloc[counter]
         dcm_path = ROOT_PATH/patient_id
         dcm_path = dcm_path.with_suffix(".dcm")
         dcm = pydicom.read_file(dcm_path).pixel_array
         
-        label = labels["Target"].iloc[c]
+        label = labels["Target"].iloc[counter]
         
         axis[i][j].imshow(dcm, cmap="bone")
         axis[i][j].set_title(label)
-        c+=1
+        counter += 1
 plt.show()
 
 ''' In order to efficiently handle our data in the Dataloader, we convert the X-Ray images stored in the DICOM format to numpy arrays. Afterwards we compute the overall mean and standard deviation of the pixels of the whole dataset, for the purpose of normalization.
@@ -43,7 +43,7 @@ Then the created numpy images are stored in two separate folders according to th
 sums = 0
 sums_squared = 0
 
-for c, patient_id in enumerate(tqdm(labels.patientId)):
+for k, patient_id in enumerate(tqdm(labels.patientId)):
     dcm_path = ROOT_PATH/patient_id  # Create the path to the dcm file
     dcm_path = dcm_path.with_suffix(".dcm")  # And add the .dcm suffix
     
@@ -55,10 +55,10 @@ for c, patient_id in enumerate(tqdm(labels.patientId)):
     dcm_array = cv2.resize(dcm, (224, 224)).astype(np.float16)
     
     # Retrieve the corresponding label
-    label = labels.Target.iloc[c]
+    label = labels.Target.iloc[k]
     
     # 4/5 train split, 1/5 val split
-    train_or_val = "train" if c < 24000 else "val" 
+    train_or_val = "train" if k < 24000 else "val" 
         
     current_save_path = SAVE_PATH/train_or_val/str(label) # Define save path and create if necessary
     current_save_path.mkdir(parents=True, exist_ok=True)
