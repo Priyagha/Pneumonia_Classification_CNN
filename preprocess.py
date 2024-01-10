@@ -1,10 +1,4 @@
-import torch
-import torchvision
-from torchvision import transforms
-import torchmetrics
-import pytorch_lightning as pl
-from pytorch_lightning.callbacks import ModelCheckpoint
-from pytorch_lightning.loggers import TensorBoardLogger
+
 from tqdm.notebook import tqdm
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,14 +8,31 @@ from pathlib import Path
 import cv2
 
 # We need the csv file containnig the labels
-labels = pd.read_csv("/path/to/rsna-pneumonia-detection-challenge/stage_2_train_labels.csv")
+labels = pd.read_csv("Data/stage_2_train_labels.csv")
 
 # Remove duplicate entries
 labels = labels.drop_duplicates("patientId")
 
 # Saving path to dicom file and also the path were we want to store our processed npy files
-ROOT_PATH = Path("/path/to/rsna-pneumonia-detection-challenge/stage_2_train_images/")
-SAVE_PATH = Path("Processed/")
+ROOT_PATH = Path("Data/stage_2_train_images")
+SAVE_PATH = Path("Data/check_test")
+
+# Taking a look at few images
+fig, axis = plt.subplots(3, 3, figsize=(9, 9))
+c = 0
+for i in range(3):
+    for j in range(3):
+        patient_id = labels.patientId.iloc[c]
+        dcm_path = ROOT_PATH/patient_id
+        dcm_path = dcm_path.with_suffix(".dcm")
+        dcm = pydicom.read_file(dcm_path).pixel_array
+        
+        label = labels["Target"].iloc[c]
+        
+        axis[i][j].imshow(dcm, cmap="bone")
+        axis[i][j].set_title(label)
+        c+=1
+plt.show()
 
 ''' In order to efficiently handle our data in the Dataloader, we convert the X-Ray images stored in the DICOM format to numpy arrays. Afterwards we compute the overall mean and standard deviation of the pixels of the whole dataset, for the purpose of normalization.
 Then the created numpy images are stored in two separate folders according to their binary label:
@@ -61,3 +72,5 @@ for c, patient_id in enumerate(tqdm(labels.patientId)):
 # Calculating mean and std
 mean = sums / 24000
 std = np.sqrt(sums_squared / 24000 - (mean**2))
+
+print(f'Mean: {mean}, Standard Deviation: {std}')
