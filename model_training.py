@@ -28,9 +28,27 @@ val_transforms = transforms.Compose([
 
 # Creating train and the val daatset corresponding data loaders
 train_dataset = torchvision.datasets.DatasetFolder(
-    "Processed/train/",
+    "Data/Processed/train/",
     loader=load_file, extensions="npy", transform=train_transforms)
 
 val_dataset = torchvision.datasets.DatasetFolder(
-    "Processed/val/",
+    "Data/Processed/val/",
     loader=load_file, extensions="npy", transform=val_transforms)
+
+# Model 
+class PneumoniaModel(pl.LightningModule):
+    def __init__(self, weight=1):
+        super().__init__()
+        
+        self.model = torchvision.models.resnet18()
+        # change conv1 from 3 to 1 input channels
+        self.model.conv1 = torch.nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+        # change out_feature of the last fully connected layer (called fc in resnet18) from 1000 to 1
+        self.model.fc = torch.nn.Linear(in_features=512, out_features=1)
+        
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=1e-4)
+        self.loss_fn = torch.nn.BCEWithLogitsLoss(pos_weight=torch.tensor([weight]))
+        
+        # simple accuracy computation
+        self.train_acc = torchmetrics.Accuracy()
+        self.val_acc = torchmetrics.Accuracy()
