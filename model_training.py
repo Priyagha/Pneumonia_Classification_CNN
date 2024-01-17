@@ -56,3 +56,14 @@ class PneumoniaModel(pl.LightningModule):
     def forward(self, data):
         pred = self.model(data)
         return pred
+    
+    def training_step(self, batch, batch_idx):
+        x_ray, label = batch
+        label = label.float()  # Convert label to float (just needed for loss computation)
+        pred = self(x_ray)[:,0]  # Prediction: Make sure prediction and label have same shape
+        loss = self.loss_fn(pred, label)  # Compute the loss
+        
+        # Log loss and batch accuracy
+        self.log("Train Loss", loss)
+        self.log("Step Train Acc", self.train_acc(torch.sigmoid(pred), label.int()))
+        return loss
