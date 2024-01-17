@@ -67,3 +67,7 @@ class PneumoniaModel(pl.LightningModule):
         self.log("Train Loss", loss)
         self.log("Step Train Acc", self.train_acc(torch.sigmoid(pred), label.int()))
         return loss
+    
+    def training_epoch_end(self, outs):
+        # After one epoch compute the whole train_data accuracy
+        self.log("Train Acc", self.train_acc.compute())
