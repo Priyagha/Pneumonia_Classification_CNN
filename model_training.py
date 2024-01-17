@@ -71,3 +71,13 @@ class PneumoniaModel(pl.LightningModule):
     def training_epoch_end(self, outs):
         # After one epoch compute the whole train_data accuracy
         self.log("Train Acc", self.train_acc.compute())
+
+    def validation_step(self, batch, batch_idx):
+        # Same steps as in the training_step
+        x_ray, label = batch
+        label = label.float()
+        pred = self(x_ray)[:,0]  # make sure prediction and label have same shape
+
+        loss = self.loss_fn(pred, label)
+
+    
