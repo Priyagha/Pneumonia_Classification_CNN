@@ -80,4 +80,12 @@ class PneumoniaModel(pl.LightningModule):
 
         loss = self.loss_fn(pred, label)
 
+        # Log validation metrics
+        self.log("Val Loss", loss)
+        self.log("Step Val Acc", self.val_acc(torch.sigmoid(pred), label.int()))
+        return loss
+    
+    def validation_epoch_end(self, outs):
+        self.log("Val Acc", self.val_acc.compute())
+    
     
