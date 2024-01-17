@@ -87,5 +87,11 @@ class PneumoniaModel(pl.LightningModule):
     
     def validation_epoch_end(self, outs):
         self.log("Val Acc", self.val_acc.compute())
+
+    def configure_optimizers(self):
+        #Caution! You always need to return a list here (just pack your optimizer into one :))
+        return [self.optimizer]
+    
+    
     
     
