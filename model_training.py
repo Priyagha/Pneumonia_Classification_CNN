@@ -52,3 +52,7 @@ class PneumoniaModel(pl.LightningModule):
         # simple accuracy computation
         self.train_acc = torchmetrics.Accuracy()
         self.val_acc = torchmetrics.Accuracy()
+
+    def forward(self, data):
+        pred = self.model(data)
+        return pred
