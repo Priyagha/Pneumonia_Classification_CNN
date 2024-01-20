@@ -50,8 +50,8 @@ class PneumoniaModel(pl.LightningModule):
         self.loss_fn = torch.nn.BCEWithLogitsLoss(pos_weight=torch.tensor([weight]))
         
         # simple accuracy computation
-        self.train_acc = torchmetrics.Accuracy()
-        self.val_acc = torchmetrics.Accuracy()
+        self.train_acc = torchmetrics.Accuracy(task="binary")
+        self.val_acc = torchmetrics.Accuracy(task="binary")
 
     def forward(self, data):
         pred = self.model(data)
@@ -92,6 +92,16 @@ class PneumoniaModel(pl.LightningModule):
         #Caution! You always need to return a list here (just pack your optimizer into one :))
         return [self.optimizer]
     
+    def save_model(self, model_path):
+        torch.save(self.state_dict(), model_path)
+
+    def load_model(self, model_path):
+        self.load_state_dict(torch.load(model_path))
     
     
-    
+model = PneumoniaModel() #Instanciating model
+model.save_model("Inital_model_with_random_weights.pth")
+
+
+
+
