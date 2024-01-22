@@ -1,1 +1,1 @@
-# Pneumonia Classification from X-Ray Image using CNN 
+# Pneumonia Classification from X-Ray Image using CNN
