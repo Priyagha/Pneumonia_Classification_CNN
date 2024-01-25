@@ -38,7 +38,13 @@ val_dataset = torchvision.datasets.DatasetFolder(
     
     
 model = PneumoniaModel() #Instanciating model
-model.save_model("Inital_model_with_random_weights.pth")
+
+# Create the checkpoint callback
+checkpoint_callback = ModelCheckpoint(
+                                        monitor='Val Acc',
+                                        save_top_k=10,
+                                        mode='max'
+                                        )
 
 
 
