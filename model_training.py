@@ -36,8 +36,16 @@ val_dataset = torchvision.datasets.DatasetFolder(
     "Data/Processed/val/",
     loader=load_file, extensions="npy", transform=val_transforms)
     
-    
-model = PneumoniaModel() #Instanciating model
+batch_size = 16
+num_workers = 4
+
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, num_workers=num_workers, shuffle=True)
+val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=batch_size, num_workers=num_workers, shuffle=False)
+print(f"There are {len(train_dataset)} train images and {len(val_dataset)} val images")
+print(f"Size of train loader: {len(train_loader)} and size test loader: {len(val_loader)}")
+
+#Instanciating model
+model = PneumoniaModel() 
 
 # Create the checkpoint callback
 checkpoint_callback = ModelCheckpoint(
@@ -52,6 +60,8 @@ trainer = pl.Trainer(gpus=gpus, logger=TensorBoardLogger(save_dir="./logs"), log
                      callbacks=checkpoint_callback,
                      max_epochs=35
                      )
+
+trainer.fit(model, train_loader, val_loader)
 
 
 
