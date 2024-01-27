@@ -41,12 +41,17 @@ model = PneumoniaModel() #Instanciating model
 
 # Create the checkpoint callback
 checkpoint_callback = ModelCheckpoint(
-                                        monitor='Val Acc',
-                                        save_top_k=10,
-                                        mode='max'
-                                        )
+                                      monitor='Val Acc',
+                                      save_top_k=10,
+                                      mode='max'
+                                      )
 
-
+# Creating the trainer
+gpus = 0
+trainer = pl.Trainer(gpus=gpus, logger=TensorBoardLogger(save_dir="./logs"), log_every_n_steps=1,
+                     callbacks=checkpoint_callback,
+                     max_epochs=35
+                     )
 
 
 
