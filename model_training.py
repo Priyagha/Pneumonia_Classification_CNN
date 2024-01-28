@@ -79,3 +79,19 @@ with torch.no_grad():
 preds = torch.tensor(preds)
 labels = torch.tensor(labels).int()
 
+'''Compute metrics:
+We can see that the overall result is already decent with our simple model.<br />
+However, we suffer from a large amount of False Negatives due to the data imbalance.<br />
+This is of particular importance in to avoid in medical imaging as missing findings might be fatal.<br />'''
+
+accuracy = torchmetrics.Accuracy()(preds, labels)
+precision = torchmetrics.Precision()(preds, labels)
+recall = torchmetrics.Recall()(preds, labels)
+cm = torchmetrics.ConfusionMatrix(num_classes=2)(preds, labels)
+cm_threshed = torchmetrics.ConfusionMatrix(num_classes=2, threshold=0.25)(preds, labels)
+
+print(f"Validation Accuracy: {accuracy}")
+print(f"Validation Precision: {precision}")
+print(f"Validation Recall: {recall}")
+print(f"Confusion Matrix:\n {cm}")
+print(f"Confusion Matrix 2:\n {cm_threshed}")
