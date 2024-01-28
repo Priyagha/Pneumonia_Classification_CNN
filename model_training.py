@@ -63,6 +63,19 @@ trainer = pl.Trainer(gpus=gpus, logger=TensorBoardLogger(save_dir="./logs"), log
 
 trainer.fit(model, train_loader, val_loader)
 
+preds = []
+labels = []
 
+# MOdel Evaluation
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+# Computing prediction on the entire validation set and storing predictions and labels
+with torch.no_grad():
+    for data, label in tqdm(val_dataset):
+        data = data.to(device).float().unsqueeze(0)
+        pred = torch.sigmoid(model(data)[0].cpu())
+        preds.append(pred)
+        labels.append(label)
+preds = torch.tensor(preds)
+labels = torch.tensor(labels).int()
 
