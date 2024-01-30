@@ -95,3 +95,12 @@ print(f"Validation Precision: {precision}")
 print(f"Validation Recall: {recall}")
 print(f"Confusion Matrix:\n {cm}")
 print(f"Confusion Matrix 2:\n {cm_threshed}")
+
+# Getting few images with model prediction 
+fig, axis = plt.subplots(3, 3, figsize=(9, 9))
+for i in range(3):
+    for j in range(3):
+        rnd_idx = np.random.randint(0, len(preds))
+        axis[i][j].imshow(val_dataset[rnd_idx][0][0], cmap="bone")
+        axis[i][j].set_title(f"Pred:{int(preds[rnd_idx] > 0.5)}, Label:{labels[rnd_idx]}")
+        axis[i][j].axis("off")
