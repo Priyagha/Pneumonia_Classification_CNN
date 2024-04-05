@@ -20,12 +20,17 @@ We utilized the **ResNet18** architecture to classify X-ray images into pneumoni
 
 **Fine-tuning**: We fine-tuned the pre-trained ResNet-18 model on the pneumonia detection task using our dataset. Fine-tuning involved updating the model's weights through backpropagation while adjusting the learning rate and employing techniques like gradient clipping to prevent overfitting.
 
-**Data Augmentation**: To address the data imbalance and enhance model generalization, we applied data augmentation techniques such as rotation, horizontal/vertical flipping, and zooming. Data augmentation artificially increases the dataset size and diversity, enabling the model to learn robust features from limited data.
+## Model Evaluation
 
-**Model Training**: We trained the ResNet-18 model on the preprocessed dataset using **Adam Optimizer**. During training, we monitored key performance metrics such as loss and accuracy on both training and validation sets to gauge model convergence and identify potential issues like overfitting.
+After training, the trained model's performance was evaluated on the validation set, assessing metrics such as precision, recall, and F1-score. Due to class imbalance we cannot rely on accruarcy as a model evaluation matrix. Additionally, conducted qualitative analysis using techniques like confusion matrix visualization to gain insights into the model's behavior and identify potential areas for improvement.
 
-**Model Evaluation**: After training, we evaluated the trained model's performance on the validation set, assessing metrics such as precision, recall, and F1-score. Due to class imbalance we cannot rely on accruarcy as a model evaluation matrix. Additionally, we conducted qualitative analysis using techniques like confusion matrix visualization to gain insights into the model's behavior and identify potential areas for improvement. 
+### Confusion Matrix
+
+The Threshold used here is 0.25. Among various thresholds tested, this particular value was selected due to its minimization of false negatives. This decision was imperative as our primary objective is to maximize the detection of individuals with pneumonia. This leads to higher recall because the model is capturing more of the true positive cases. 
+
+![Confusion Matrix](Confusion_Matrix.png)
 
 ## Conclusion
 
 In summary, our project aims to develop an accurate and interpretable pneumonia classification model from X-ray images. By leveraging state-of-the-art techniques in deep learning and image analysis, we strive to contribute to the early detection and management of pneumonia, ultimately improving patient outcomes and reducing mortality rates.
+
