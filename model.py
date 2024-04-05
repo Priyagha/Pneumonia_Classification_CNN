@@ -9,7 +9,11 @@ class PneumoniaModel(pl.LightningModule):
     def __init__(self, weight=1):
         super().__init__()
         
-        self.model = torchvision.models.resnet18()
+        self.model = torchvision.models.resnet18(pretrained = True)
+
+        for params in self.model.parameters():
+            params.requires_grad = False
+            
         # change conv1 from 3 to 1 input channels
         self.model.conv1 = torch.nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
         # change out_feature of the last fully connected layer (called fc in resnet18) from 1000 to 1
@@ -37,7 +41,7 @@ class PneumoniaModel(pl.LightningModule):
         self.log("Step Train Acc", self.train_acc(torch.sigmoid(pred), label.int()))
         return loss
     
-    def training_epoch_end(self, outs):
+    def on_training_epoch_end(self, outs):
         # After one epoch compute the whole train_data accuracy
         self.log("Train Acc", self.train_acc.compute())
 
@@ -54,7 +58,7 @@ class PneumoniaModel(pl.LightningModule):
         self.log("Step Val Acc", self.val_acc(torch.sigmoid(pred), label.int()))
         return loss
     
-    def validation_epoch_end(self, outs):
+    def on_validation_epoch_end(self, outs):
         self.log("Val Acc", self.val_acc.compute())
 
     def configure_optimizers(self):
